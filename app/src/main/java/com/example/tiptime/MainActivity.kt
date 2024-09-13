@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,6 +33,7 @@ import java.text.NumberFormat
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.KeyboardType
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +67,9 @@ fun TipTimeLayout() {
                 .padding(bottom = 16.dp, top = 40.dp)
                 .align(alignment = Alignment.Start)
         )
-        EditNumberField(modifier = Modifier.padding(bottom = 32.dp).fillMaxWidth())
+        EditNumberField(modifier = Modifier
+            .padding(bottom = 32.dp)
+            .fillMaxWidth())
         Text(
             text = stringResource(R.string.tip_amount, "$0.00"),
             style = MaterialTheme.typography.displaySmall
@@ -79,7 +83,10 @@ fun EditNumberField(modifier: Modifier = Modifier){
     var amountInput by remember { mutableStateOf("") }
     TextField(
         value = amountInput,
-        onValueChange = { amountInput = it },
+        onValueChange = { amountInput = it }, // récupérer chiffre par chiffre, l'enregistre, l'attribue puis l'efface/recommence le process si un autre chiffre est entré
+        label = { Text(stringResource(R.string.bill_amount))}, // accepte la valeur de la ressource bill_amount et affiche comme un placeholder
+        singleLine = true,// une seule ligne à faire défiler
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),//clavier de nombres seulement
         modifier = modifier
     )
 }
