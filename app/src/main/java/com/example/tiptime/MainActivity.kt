@@ -1,10 +1,12 @@
 package com.example.tiptime
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -44,6 +47,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 
@@ -88,6 +92,7 @@ fun TipTimeLayout() {
         )
         EditNumberField(
             label = R.string.bill_amount,
+            leadingIcon = R.drawable.money,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Next
@@ -100,6 +105,7 @@ fun TipTimeLayout() {
         )
         EditNumberField( // pareil mais pour le choix du pourcentage
             label = R.string.how_was_the_service,
+            leadingIcon = R.drawable.percent,
             keyboardOptions = KeyboardOptions.Default.copy(
                 keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
@@ -127,6 +133,7 @@ fun TipTimeLayout() {
 @Composable
 fun EditNumberField(
     @StringRes label: Int,//ref de ressource string.xml;
+    @DrawableRes leadingIcon: Int,
     keyboardOptions: KeyboardOptions, //transmettre le parametre en argument
     value: String,
     onValueChange: (String) -> Unit, // accepte valeur string et aucune valeur renvoyée; rappel lambda qui màj la valeur amountInput a partir de l'entrée utilisateur
@@ -138,6 +145,7 @@ fun EditNumberField(
     // définies dans l'autre fonction pour récupérer l'état de EditNumberField
     TextField(
         value = value,
+        leadingIcon = {Icon(painter = painterResource(id = leadingIcon), null)},
         onValueChange = onValueChange, // récupérer chiffre par chiffre, l'enregistre, l'attribue puis l'efface/recommence le process si un autre chiffre est entré
         label = { Text(stringResource(label))}, // accepte la valeur de la ressource bill_amount et affiche comme un placeholder
         singleLine = true,// une seule ligne à faire défiler
