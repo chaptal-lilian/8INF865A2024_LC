@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -56,8 +57,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TipTimeLayout() {
     var amountInput by remember { mutableStateOf("") }
+    var tipInput by remember { mutableStateOf("") }
     val amount = amountInput.toDoubleOrNull() ?: 0.0 // analyse en tant que double et renvoie, sinon null si c'est pas une représentation valide de nombre; operateur elvis ?: renvoie l'expression qui le precede si pas null et ce qui suit si null
-    val tip = calculateTip(amount)
+    val tipPercent = tipInput.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount, tipPercent)
     Column(
         modifier = Modifier
             .statusBarsPadding()
@@ -74,11 +77,21 @@ fun TipTimeLayout() {
                 .align(alignment = Alignment.Start)
         )
         EditNumberField(
+            label = R.string.bill_amount,
             value = amountInput,
             onValueChange = { amountInput = it},
             modifier = Modifier
-            .padding(bottom = 32.dp)
-            .fillMaxWidth())
+                .padding(bottom = 32.dp)
+                .fillMaxWidth()
+        )
+        EditNumberField( // pareil mais pour le choix du pourcentage
+            label = R.string.how_was_the_service,
+            value = tipInput,
+            onValueChange = { tipInput = it },
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+                .fillMaxWidth()
+        )
         Text(
             text = stringResource(R.string.tip_amount, tip),// propriété tip pour afficher le montant du pourboire
             style = MaterialTheme.typography.displaySmall
@@ -89,6 +102,7 @@ fun TipTimeLayout() {
 
 @Composable
 fun EditNumberField(
+    @StringRes label: Int,//ref de ressource string.xml;
     value: String,
     onValueChange: (String) -> Unit, // accepte valeur string et aucune valeur renvoyée; rappel lambda qui màj la valeur amountInput a partir de l'entrée utilisateur
     modifier: Modifier = Modifier
@@ -100,7 +114,7 @@ fun EditNumberField(
     TextField(
         value = value,
         onValueChange = onValueChange, // récupérer chiffre par chiffre, l'enregistre, l'attribue puis l'efface/recommence le process si un autre chiffre est entré
-        label = { Text(stringResource(R.string.bill_amount))}, // accepte la valeur de la ressource bill_amount et affiche comme un placeholder
+        label = { Text(stringResource(label))}, // accepte la valeur de la ressource bill_amount et affiche comme un placeholder
         singleLine = true,// une seule ligne à faire défiler
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),//clavier de nombres seulement
         modifier = modifier
