@@ -36,6 +36,7 @@ import java.text.NumberFormat
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 
 class MainActivity : ComponentActivity() {
@@ -78,6 +79,10 @@ fun TipTimeLayout() {
         )
         EditNumberField(
             label = R.string.bill_amount,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Next
+            ),
             value = amountInput,
             onValueChange = { amountInput = it},
             modifier = Modifier
@@ -86,6 +91,10 @@ fun TipTimeLayout() {
         )
         EditNumberField( // pareil mais pour le choix du pourcentage
             label = R.string.how_was_the_service,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
             value = tipInput,
             onValueChange = { tipInput = it },
             modifier = Modifier
@@ -103,6 +112,7 @@ fun TipTimeLayout() {
 @Composable
 fun EditNumberField(
     @StringRes label: Int,//ref de ressource string.xml;
+    keyboardOptions: KeyboardOptions, //transmettre le parametre en argument
     value: String,
     onValueChange: (String) -> Unit, // accepte valeur string et aucune valeur renvoyée; rappel lambda qui màj la valeur amountInput a partir de l'entrée utilisateur
     modifier: Modifier = Modifier
@@ -116,7 +126,7 @@ fun EditNumberField(
         onValueChange = onValueChange, // récupérer chiffre par chiffre, l'enregistre, l'attribue puis l'efface/recommence le process si un autre chiffre est entré
         label = { Text(stringResource(label))}, // accepte la valeur de la ressource bill_amount et affiche comme un placeholder
         singleLine = true,// une seule ligne à faire défiler
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),//clavier de nombres seulement
+        keyboardOptions = keyboardOptions,
         modifier = modifier
     )
 }
