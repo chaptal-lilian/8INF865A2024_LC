@@ -67,6 +67,7 @@ fun GameScreen(
         GameLayout(
             onUserGuessChanged = { gameViewModel.updateUserGuess(it) },
             userGuess = gameViewModel.userGuess,
+            wordCount = gameUiState.currentWordCount,
             onKeyboardDone = { gameViewModel.checkUserGuess() },
             isGuessWrong = gameUiState.isGuessedWordWrong,
             currentScrambledWord = gameUiState.currentScrambledWord,
@@ -94,7 +95,7 @@ fun GameScreen(
             }
 
             OutlinedButton(
-                onClick = { },
+                onClick = { gameViewModel.skipWord() },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -104,7 +105,7 @@ fun GameScreen(
             }
         }
 
-        GameStatus(score = 0, modifier = Modifier.padding(20.dp))
+        GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
     }
 }
 
@@ -126,6 +127,7 @@ fun GameLayout(
     onUserGuessChanged: (String) -> Unit,
     onKeyboardDone: () -> Unit,
     userGuess: String,
+    wordCount: Int,
     currentScrambledWord: String,
     isGuessWrong: Boolean,
     modifier: Modifier = Modifier) {
@@ -146,7 +148,7 @@ fun GameLayout(
                     .background(colorScheme.surfaceTint)
                     .padding(horizontal = 10.dp, vertical = 4.dp)
                     .align(alignment = Alignment.End),
-                text = currentScrambledWord,
+                text = stringResource(R.string.word_count, wordCount),
                 fontSize = 45.sp,
                 style = typography.titleMedium,
                 color = colorScheme.onPrimary
